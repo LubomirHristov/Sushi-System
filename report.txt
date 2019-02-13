@@ -1,33 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-Programming 2 Coursework Report
-
-
-
-
-Lyubomir Hristov
-Student ID: 29326168
-
-
-
-
-
-
-
-
-
-
-
-
-
 Part 1: Ingredients, Suppliers and Sushi Dishes
 
 Ingredient.java
@@ -102,7 +72,7 @@ common..setDishRestockThreshold
 common..setDishRestockAmount
 common..setDishStockAvailable
 
-The Stock Management class keeps track of ingredients and dishes that are held in stock. It is responsible for every operation that includes either an ingredient or a dish. I make a Singleton object (the Stock Management instance) in order to use the same object reference wherever I need the Stock Management. I have 2 similar maps ñ one for ingredients and one for dishes- where I keep every ingredient/dish and a list of its restock details (restock threshold, restock amount, stock available). The first index of the list is always the threshold, the second is the restock amount and the third the available stock. In order to synchronize the operations appropriately I use 2 locks ñ one for all operations that modify or require ingredients and the other is for the dishes. I have a few methods that I use to parse data such as get an ingredient/dish by its name or check if a given string is a name of an existing ingredient or dish. The rest of the operations simply retrieve or modify data from the map.
+The Stock Management class keeps track of ingredients and dishes that are held in stock. It is responsible for every operation that includes either an ingredient or a dish. I make a Singleton object (the Stock Management instance) in order to use the same object reference wherever I need the Stock Management. I have 2 similar maps ‚Äì one for ingredients and one for dishes- where I keep every ingredient/dish and a list of its restock details (restock threshold, restock amount, stock available). The first index of the list is always the threshold, the second is the restock amount and the third the available stock. In order to synchronize the operations appropriately I use 2 locks ‚Äì one for all operations that modify or require ingredients and the other is for the dishes. I have a few methods that I use to parse data such as get an ingredient/dish by its name or check if a given string is a name of an existing ingredient or dish. The rest of the operations simply retrieve or modify data from the map.
 
 Part 3: Kitchen Staff
 
@@ -118,7 +88,7 @@ common.Staff.shouldPrepareDish
 common.Staff.notEnoughDishStock
 common.Staff.run
 
-The Staff class represents a member of the kitchen staff that can be run as a thread. It starts running once it is added and is running constantly until it is removed (interrupted). When I removed it I make sure that it is not simply removed from the list but also the thread is stopped. While running the staff constantly checks whether a dish should be prepared shouldPrepareDish() ñ this checks if the given dish is below the threshold. If it should be made then the staff goes to makeDish() where if there are enoughIngredients() makes a dish for a random amount of time between 20 and 60 seconds. The staff makes 1 dish on every iteration while there is notEnoughDishStock(). 
+The Staff class represents a member of the kitchen staff that can be run as a thread. It starts running once it is added and is running constantly until it is removed (interrupted). When I removed it I make sure that it is not simply removed from the list but also the thread is stopped. While running the staff constantly checks whether a dish should be prepared shouldPrepareDish() ‚Äì this checks if the given dish is below the threshold. If it should be made then the staff goes to makeDish() where if there are enoughIngredients() makes a dish for a random amount of time between 20 and 60 seconds. The staff makes 1 dish on every iteration while there is notEnoughDishStock(). 
 
 Part 4: Communication Layer
 
@@ -140,7 +110,7 @@ common.ClientComms.getUserOrder
 common.ClientComms.addOrder
 common.ClientComms.updateOrderStatus
 
-I have implemented the Communication layer by using sockets. Those classes handle communication between the server and the client. Firstly, in the ServerCommsís constructor I create the server socket and then a new anonymous thread that is going to listen for incoming connections from clients. In this thread I also create another anonymous thread that listens for the messages sent by the clients. When there is a incoming message it is immediately handled by the receiveMessageFromClient() method. The messages received are objects. When the type of the message is identified in the handler, the serverComms returns a response by first getting the required object from the server class and then writing it to the objectOutputStream via the sendMessageToClient() method. 
+I have implemented the Communication layer by using sockets. Those classes handle communication between the server and the client. Firstly, in the ServerComms‚Äôs constructor I create the server socket and then a new anonymous thread that is going to listen for incoming connections from clients. In this thread I also create another anonymous thread that listens for the messages sent by the clients. When there is a incoming message it is immediately handled by the receiveMessageFromClient() method. The messages received are objects. When the type of the message is identified in the handler, the serverComms returns a response by first getting the required object from the server class and then writing it to the objectOutputStream via the sendMessageToClient() method. 
 
 In the client socket gets connected to the server (localhost) on the same port when it is instantiated. It has GET, ADD and UPDATE methods that send a string to the serverComms via the sendMessageToServer() method and return the desired objects to the client when they receive a response. All reading and writing to the socket is achieved with object input/output streams.
 
@@ -246,7 +216,7 @@ server.Configuration.addIngredientConfig
 server.Configuration.addSupplierConfig
 server.Configuration.resetAllLists
 
-I initialize the configuration by passing a filename to it. Firstly, I have created a method readLines() that reads every line from the file that is passed in it and first clears the content of all the existing lists if there is still any information in them (i.e. when the server has been running for some time and then I decide to load a configuration). Secondly, I match every line with the corresponding string that it starts with, parse the information in it and add it to the lists in the server. For example, if the line starts with SUPPLIER I split the line by ì:î and add a new supplier with the first argument, which is the name, and the second argument ñ its distance. If I have to add an object from the String I use my previously created methods for getting existing objects by their name, content, etc. 
+I initialize the configuration by passing a filename to it. Firstly, I have created a method readLines() that reads every line from the file that is passed in it and first clears the content of all the existing lists if there is still any information in them (i.e. when the server has been running for some time and then I decide to load a configuration). Secondly, I match every line with the corresponding string that it starts with, parse the information in it and add it to the lists in the server. For example, if the line starts with SUPPLIER I split the line by ‚Äú:‚Äù and add a new supplier with the first argument, which is the name, and the second argument ‚Äì its distance. If I have to add an object from the String I use my previously created methods for getting existing objects by their name, content, etc. 
 
 Part 8: Server
 
@@ -319,7 +289,7 @@ default.ServerApplication.main
 default.ServerApplication.initialise
 default.ServerApplication.launchGUI
 
-The server, similar to the StockManagement class is also a singleton that can be used anywhere in the same JVM by getting its instance. The serverís main function is to get a request from the client via the communication layer and allows it to:
+The server, similar to the StockManagement class is also a singleton that can be used anywhere in the same JVM by getting its instance. The server‚Äôs main function is to get a request from the client via the communication layer and allows it to:
 
 * view current stock levels (of ingredients and dishes),
 * change restocking levels,
