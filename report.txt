@@ -1,0 +1,346 @@
+
+
+
+
+
+
+
+
+
+
+Programming 2 Coursework Report
+
+
+
+
+Lyubomir Hristov
+Student ID: 29326168
+
+
+
+
+
+
+
+
+
+
+
+
+
+Part 1: Ingredients, Suppliers and Sushi Dishes
+
+Ingredient.java
+common.Ingredient.Ingredient
+common.Ingredient.getName
+common.Ingredient.getUnitOfMeasurement
+common.Ingredient.getSupplier
+common.Ingredient.setName
+common.Ingredient.setUnitOfMeasurement
+common.Ingredient.setSupplier
+
+Supplier.java
+common.Supplier.Supplier
+common.Supplier.getName
+common.Supplier.getDistance
+common.Supplier.setName
+common.Supplier.setDistance
+
+
+Dish.java
+common.Dish.Dish
+common.Dish.getName
+common.Dish.getPrice
+common.Dish.getDescription
+common.Dish.getRecipe
+common.Dish.setName
+common.Dish.setDescription
+common.Dish.setPrice
+common.Dish.setRecipe
+common.Dish.getIngredients
+
+Those 3 classes only represent the objects that we are going to use in the next parts. They simply provide getter and setter methods for their properties. In the dish class I have created a getIngredients method, which goes through the dish recipe and returns a String by appends all elements in the same format as the configuration format. I have used notifyUpdate() whenever I change a value of those classes.
+
+
+
+
+
+
+
+Part 2: Stock Management
+
+StockManagement.java
+common..StockManagement
+common..getINSTANCE
+common..addIngredient
+common..removeIngredient
+common..getIngredientByName
+common..getIngredientStockLevels
+common..addIngredientToDish
+common..removeIngredientFromDish
+common..addDish
+common..removeDish
+common..getDishStockLevels
+common..getDishByName
+common..checkIfIsDish
+common..getIngredients
+common..getIngredientRestockDetails
+common..setIngredientRestockDetails
+common..setDishRestockDetails
+common..getIngredientRestockThreshold
+common..getIngredientRestockAmount
+common..getIngredientStockAvailable
+common..getDishes
+common..getDishRestockDetails
+common..getDishRestockThreshold
+common..getDishRestockAmount
+common..getDishStockAvailable
+common..setIngredientRestockThreshold
+common..setIngredientRestockAmount
+common..setIngredientStockAvailable
+common..setDishRestockThreshold
+common..setDishRestockAmount
+common..setDishStockAvailable
+
+The Stock Management class keeps track of ingredients and dishes that are held in stock. It is responsible for every operation that includes either an ingredient or a dish. I make a Singleton object (the Stock Management instance) in order to use the same object reference wherever I need the Stock Management. I have 2 similar maps – one for ingredients and one for dishes- where I keep every ingredient/dish and a list of its restock details (restock threshold, restock amount, stock available). The first index of the list is always the threshold, the second is the restock amount and the third the available stock. In order to synchronize the operations appropriately I use 2 locks – one for all operations that modify or require ingredients and the other is for the dishes. I have a few methods that I use to parse data such as get an ingredient/dish by its name or check if a given string is a name of an existing ingredient or dish. The rest of the operations simply retrieve or modify data from the map.
+
+Part 3: Kitchen Staff
+
+Staff.java
+common.Staff.Staff
+common.Staff.getName
+common.Staff.getStatus
+common.Staff.setName
+common.Staff.setStatus
+common.Staff.makeDish
+common.Staff.enoughIngredient
+common.Staff.shouldPrepareDish
+common.Staff.notEnoughDishStock
+common.Staff.run
+
+The Staff class represents a member of the kitchen staff that can be run as a thread. It starts running once it is added and is running constantly until it is removed (interrupted). When I removed it I make sure that it is not simply removed from the list but also the thread is stopped. While running the staff constantly checks whether a dish should be prepared shouldPrepareDish() – this checks if the given dish is below the threshold. If it should be made then the staff goes to makeDish() where if there are enoughIngredients() makes a dish for a random amount of time between 20 and 60 seconds. The staff makes 1 dish on every iteration while there is notEnoughDishStock(). 
+
+Part 4: Communication Layer
+
+ServerComms.java
+common.ServerComms.ServerComms
+common.ServerComms.sendMessageToClient
+common.ServerComms.receiveMessageFromClient
+
+ClientComms.java
+common.ClientComms.ClientComms
+common.ClientComms.sendMessageToServer
+common.ClientComms.receiveMessage
+common.ClientComms.getObjectPostcodes
+common.ClientComms.getUserObjects
+common.ClientComms.getOrderObjects
+common.ClientComms.getDishObjects
+common.ClientComms.registerUser
+common.ClientComms.getUserOrder
+common.ClientComms.addOrder
+common.ClientComms.updateOrderStatus
+
+I have implemented the Communication layer by using sockets. Those classes handle communication between the server and the client. Firstly, in the ServerComms’s constructor I create the server socket and then a new anonymous thread that is going to listen for incoming connections from clients. In this thread I also create another anonymous thread that listens for the messages sent by the clients. When there is a incoming message it is immediately handled by the receiveMessageFromClient() method. The messages received are objects. When the type of the message is identified in the handler, the serverComms returns a response by first getting the required object from the server class and then writing it to the objectOutputStream via the sendMessageToClient() method. 
+
+In the client socket gets connected to the server (localhost) on the same port when it is instantiated. It has GET, ADD and UPDATE methods that send a string to the serverComms via the sendMessageToServer() method and return the desired objects to the client when they receive a response. All reading and writing to the socket is achieved with object input/output streams.
+
+Part 5: Client
+
+Client.java
+client.Client.register
+client.Client.login
+client.Client.getPostcodes
+client.Client.getDishes
+client.Client.getDishDescription
+client.Client.getDishPrice
+client.Client.getBasket
+client.Client.getBasketCost
+client.Client.addDishToBasket
+client.Client.updateDishInBasket
+client.Client.checkoutBasket
+client.Client.clearBasket
+client.Client.getOrders
+client.Client.getOrderByDetails
+client.Client.isOrderComplete
+client.Client.getOrderStatus
+client.Client.getOrderCost
+client.Client.cancelOrder
+client.Client.addUpdateListener
+client.Client.notifyUpdate
+
+Order.java
+common.Order.Order
+common.Order.getName
+common.Order.getStatus
+common.Order.getCost
+common.Order.getOrderBasket
+common.Order.setName
+common.Order.setStatus
+common.Order.setCost
+common.Order.setOrderBasket
+common.Order.evaluateCost
+common.Order.getOrderDetails
+
+
+User.java
+common.User.User
+common.User.getName
+common.User.getPassword
+common.User.getAddress
+common.User.getPostcode
+common.User.getBasket
+common.User.setUsername
+common.User.setPassword
+common.User.setAddress
+common.User.setPostcode
+common.User.setBasket
+
+Postcode.java
+common.Postcode.Postcode
+common.Postcode.getName
+common.Postcode.setCode
+common.Postcode.getDistance
+common.Postcode.setDistance
+
+ClientApplication.java
+default.ClientApplication.initialise
+default.ClientApplication.launchGUI
+default.ClientApplication.main
+
+
+The client class allows customers to order sushi from the business. All the information that needs to be displayed and updated afterwards is taken from the server by the communication layer. I have implemented all methods from the Client Interface and have also added a method that allows me to find a specific order that is desired by its name and content. Basically I traverse the orders list, I compare the names and the order details (as strings taken from the getOrderDetails() from Order which returns the dishes and quantities from the order formatted) by sorting the arrays of strings because the sequence of the order elements (taken randomly from the Map<Dish, Number> order) should not matter. I have lists for dishes, users, postcodes and orders that get the information they need from the server via the communication layer. The implemented methods(e.g.getDishes(), getDishPrice(), etc..) use that gather data for the GUI. I also have a list that keeps UpdateListeners that are added and notified from my addUpdateListener() and notifyUpdate() methods. Users can register and login. I have added an evaluateCost() method in Order class that is needed in the client that gets an order and returns its total cost. In the Client Application I simply create a new Client and launch the GUI.
+
+Part 6: Drones
+
+Drone.java
+common.Drone.Drone
+common.Drone.getName
+common.Drone.getSpeed
+common.Drone.getStatus
+common.Drone.setSpeed
+common.Drone.setStatus
+common.Drone.hasToFetchIngredient
+common.Drone.fetchIngredient
+common.Drone.timeToSupplier
+common.Drone.timeToUser
+common.Drone.shouldMakeDelivery
+common.Drone.reduceDishStock
+common.Drone.makeDelivery
+common.Drone.run
+
+The drone represents a delivery drone with a specific flying speed and droneID(its name). It is run as a thread and monitors all the ingredients in the stock. If any falls below the threshold (hasToFetchIngredients() ) it simulates a travel (fetchIngredients() ) to a Supplier which takes timeToSupplier() time. If there is no need to get any ingredients it makes a delivery if it shouldMakeDelivery() (i.e. there are orders to be delivered in the list). If it has to then it simulates makeDelivery() and the dish stocks are reduced (when the drone gets them and starts delivering). The time taken for a delivery is timeToUser() which similarly to timeToSupplier() is the distance do the destination divided by the drone speed and multiplied by 10000 (because I am giving it to the thread.sleep in milliseconds). The drone starts running as soon as it is added and runs until it is removed (interrupted). After this the thread is stopped.
+
+Part 7: Configuration 
+
+Configuration.java
+server.Configuration.Configuration
+server.Configuration.readLines
+server.Configuration.addDroneConfig
+server.Configuration.addStaffConfig
+server.Configuration.addStockConfig
+server.Configuration.addOrderConfig
+server.Configuration.addUserConfig
+server.Configuration.addPostcodeConfig
+server.Configuration.addDishConfig
+server.Configuration.addIngredientConfig
+server.Configuration.addSupplierConfig
+server.Configuration.resetAllLists
+
+I initialize the configuration by passing a filename to it. Firstly, I have created a method readLines() that reads every line from the file that is passed in it and first clears the content of all the existing lists if there is still any information in them (i.e. when the server has been running for some time and then I decide to load a configuration). Secondly, I match every line with the corresponding string that it starts with, parse the information in it and add it to the lists in the server. For example, if the line starts with SUPPLIER I split the line by “:” and add a new supplier with the first argument, which is the name, and the second argument – its distance. If I have to add an object from the String I use my previously created methods for getting existing objects by their name, content, etc. 
+
+Part 8: Server
+
+Server.java
+server.Server.Server
+server.Server.getServerINSTANCE
+server.Server.loadConfiguration
+server.Server.setRestockingIngredientsEnabled
+server.Server.setRestockingDishesEnabled
+server.Server.getRestockingIngredientsIsEnabled
+server.Server.getRestockingDishesIsEnabled
+server.Server.setStock
+server.Server.setStock
+server.Server.getDishes
+server.Server.addDish
+server.Server.removeDish
+server.Server.addIngredientToDish
+server.Server.removeIngredientFromDish
+server.Server.setRecipe
+server.Server.setRestockLevels
+server.Server.getRestockThreshold
+server.Server.getRestockAmount
+server.Server.getRecipe
+server.Server.getDishStockLevels
+server.Server.getIngredients
+server.Server.addIngredient
+server.Server.removeIngredient
+server.Server.setRestockLevels
+server.Server.getRestockThreshold
+server.Server.getRestockAmount
+server.Server.getIngredientStockLevels
+server.Server.getSuppliers
+server.Server.addSupplier
+server.Server.removeSupplier
+server.Server.getSupplierDistance
+server.Server.getSupplierByName
+server.Server.getDrones
+server.Server.addDrone
+server.Server.removeDrone
+server.Server.getDroneSpeed
+server.Server.getDroneStatus
+server.Server.getStaff
+server.Server.addStaff
+server.Server.removeStaff
+server.Server.getStaffStatus
+server.Server.getOrders
+server.Server.getRemainingOrders
+server.Server.orderIsSatisfied
+server.Server.getOrderByName
+server.Server.getUserOrder
+server.Server.addOrder
+server.Server.removeOrder
+server.Server.getOrderDistance
+server.Server.isOrderComplete
+server.Server.getOrderStatus
+server.Server.getOrderCost
+server.Server.getPostcodes
+server.Server.addPostcode
+server.Server.removePostcode
+server.Server.getPostcodeByCode
+server.Server.getUsers
+server.Server.getUserByName
+server.Server.addUser
+server.Server.removeUser
+server.Server.addUpdateListener
+server.Server.notifyUpdate
+
+ServerApplication.java
+default.ServerApplication.main
+default.ServerApplication.initialise
+default.ServerApplication.launchGUI
+
+The server, similar to the StockManagement class is also a singleton that can be used anywhere in the same JVM by getting its instance. The server’s main function is to get a request from the client via the communication layer and allows it to:
+
+* view current stock levels (of ingredients and dishes),
+* change restocking levels,
+* change recipes of dishes,
+* add or remove ingredients, suppliers and dishes,
+* view the status of customer orders,
+* remove specific orders (and cancel them if necessary),
+* remove all completed orders,
+* view the status of kitchen staff and drones, and
+* add or remove kitchen staff and drones,
+* load a configuration file.
+
+I have explained how the server works by explaining how all of the classes listed by now work. I have implemented all methods that basically get, add or modify information. I also have some methods that I use to get objects by their properties e.g. getUserByName(). I have synchronized the methods that require access to orders such as add/remove order or getRemainingOrders() which returns all orders that are for delivery. I have done this so that the drones can work concurrently. I have also implemented the addUpdateListeners and notifyUpdate methods in order to notify all the listeners in the list for changes. Basically the main function of the server is to store all the data and retrieve or update it upon requests.
+
+
+
+Part 9: Persistence
+
+DataPersistence.java
+default.DataPersistence.getDataPersistenceINSTANCE
+default.DataPersistence.saveConfiguration
+
+
+In order to use the data persistence class and save all information when the program (server) stops in its saveConfiguration() method I do Runtime.getRuntime.addShitdownHook and a new thread in it that is going to traverse all the lists that have to be saved and will write all of that information line by line in a file in the same format as the Configuration format. Therefore, when the program is closed and all data is saved, it will be possible to load it when the server is started again. In order to save all of the information I simply traverse all the lists in the server and StockManagement and write it by appending characters so that it is in the same format. In order to use it I simply declare it in the main method of the server application after I launch the GUI.

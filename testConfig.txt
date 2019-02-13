@@ -1,0 +1,30 @@
+SUPPLIER:Sushi Supplies:10
+SUPPLIER:Sushi R Us:20
+
+INGREDIENT:Avocado:Units:Sushi R Us:5:10
+INGREDIENT:Vinegar:Grams:Sushi Supplies:100:1000
+INGREDIENT:Salt:Grams:Sushi Supplies:50:100
+INGREDIENT:Rice:Grams:Sushi Supplies:1000:5000
+
+DISH:Side Rice:Side portion of rice:5:1:10:500 * Rice
+DISH:Sushi Roll:Rice and things:10:1:10:1 * Avocado,30 * Vinegar,10 * Salt,150 * Rice
+
+POSTCODE:SO17 1BJ:2
+USER:Admin:password:University Road:SO17 1BJ
+
+ORDER:Admin:2 * Side Rice,5 * Sushi Roll
+ORDER:Admin:7 * Side Rice
+ORDER:Admin:3 * Sushi Roll
+
+STOCK:Avocado:15
+STOCK:Vinegar:1100
+STOCK:Salt:150
+STOCK:Rice:6000
+STOCK:Side Rice:5
+STOCK:Sushi Roll:2
+
+STAFF:Joshua
+STAFF:Mary
+
+DRONE:10
+DRONE:20

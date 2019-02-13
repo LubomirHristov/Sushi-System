@@ -1,0 +1,53 @@
+import sys
+import re
+import os
+import glob
+
+
+def parse(file_content):
+    package_pattern = 'package .*;'
+    package = re.search(package_pattern, file_content)
+    if package is not None:
+        package = package.group().split(' ')[1][:-1]
+    else:
+        # no package
+        package = 'default'
+
+    class_pattern = '((public)|(private))? class \w*\ ?(extends (\w*)?( implements)?( \w*)?)? '
+    method_pattern = '((public)|(private)|(protected)) (static)?.*\(.*\)'
+
+    classes = []
+    methods = []
+    curr_class = ''
+    for line in file_content.split('\n'):
+        class_match = re.match(class_pattern, line)
+        if class_match is not None:
+            class_match_str = class_match.string.split('class')[1].split()[0]
+            curr_class = class_match_str
+
+            classes.append(package + '.' + curr_class)
+
+        method = re.search(method_pattern, line)
+        if method is not None and '=' not in line:
+            method_name = method.group().split('()')[0].split('(')[0].split()[-1]
+            # curr_class and package will always be defined first if valid java code...
+            methods.append(package + '.' + curr_class + '.' + method_name)
+    # print('\n'.join([package + '.' + x for x in classes]))
+    print('\n'.join(methods))
+
+
+def main():
+    input_dir = sys.argv[1]
+    if not os.path.isdir(input_dir):
+        print('Give me a directory kek')
+        return
+    for file in glob.glob(os.path.abspath(input_dir) + '/**/*.java', recursive=True):
+        # with open(os.path.join(os.path.abspath(input_dir), file), 'r') as f:
+        with open(file, 'r') as f:
+            print(os.path.basename(file))
+            parse(f.read())
+            print()
+
+
+if __name__ == "__main__":
+    main()
